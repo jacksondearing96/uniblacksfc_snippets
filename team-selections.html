@@ -199,17 +199,16 @@
 
 <div id="inputs">
   <!-- TODO: set this to default to the current year. -->
-  Year: <input type="number" id="year-input" name="Year" value="2020">
+
+  Year: <input type="number" id="year-input" name="Year">
   Womens: <input type="checkbox" id="womens-input" name="Womens">
   <button id="team-selection-button">Go</button>
 </div>
 <div id="team-selections">
   <div id="teams-for-year"></div>
   <div id="rounds"></div>
-
   <div id='container_'>
     <p id="players"></p>
-
     <ul id="interchange">
       <li style="text-align:center">INTERCHANGE:</li>
     </ul>
@@ -217,6 +216,12 @@
 </div>
 <script>
   var $ = jQuery.noConflict();
+
+  // Initialise the year input field with the current year.
+  // TODO: Update this to 2021 when games have been entered into the database.
+  let date = new Date();
+  const thisYear = date.getFullYear();
+  $('#year-input').val(thisYear - 1);
 
   function removeGamesThatHaveNotBeenInitialisedInDatabase() {
     // Rounds that have not been entered in the databse will appear with #id = game-GameID-0.
@@ -233,16 +238,19 @@
   // Takes an HTML element that is used to hold a player and populates the 
   // element with the data to be shown for that player.
   function initialisePlayerElementContent(playerElement, player) {
-    let position = player['Position'];
+    const position = player['Position'];
+
     playerElement.setAttribute('id', position);
     playerElement.setAttribute('class', 'player');
-    playerElement.innerHTML = player['FirstName'];
 
+    playerElement.innerHTML = player['FirstName'];
     // Wrap some of the players' names for better viewing over the oval.
-    if (position != 'RUCK' && position != 'R' && position != 'RR' && position != 'C' && !position.includes('INT')) {
-      playerElement.innerHTML += '<br>';
-    } else {
+    const positionsToNotWrapNames = ['RUCK', 'R', 'RR', 'C'];
+    const interchangePrefix = 'INT';
+    if (positionsToNotWrapNames.includes(position) || position.includes(interchangePrefix)) {
       playerElement.innerHTML += ' ';
+    } else {
+      playerElement.innerHTML += '<br>';
     }
     playerElement.innerHTML += player['Surname'];
   }
@@ -308,44 +316,52 @@
       success: function (response) {
         let teamsButtons = JSON.parse(response)['payload']['content'];
         $("#teams-for-year").html(teamsButtons);
+        addOnClickListenerForTeamButtons();
+      }
+    });
+  }
 
-        $('#teams-for-year button').click(function (event) {
-          clearOvalOfAllPlayers();
-          highlightTeam($(event.target));
-          let teamId = extractId(event.target.id);
-          console.log(teamId);
-          $.ajax({
-            url: "/members/php/unprotected_php/getTeamRounds2.php",
-            type: 'POST',
-            data: { "TeamID": teamId },
-            success: function (response) {
-              let rounds = JSON.parse(response)['payload']['content'];
-              console.log(rounds);
-              $("#rounds").html(rounds);
+  function addOnClickListenerForTeamButtons() {
+    $('#teams-for-year button').click(function (event) {
+      clearOvalOfAllPlayers();
+      highlightTeam($(event.target));
+      let teamId = extractId(event.target.id);
+      getRoundsForTeam(teamId);
+    });
+  }
 
-              removeGamesThatHaveNotBeenInitialisedInDatabase();
+  function getRoundsForTeam(teamId) {
+    $.ajax({
+      url: "/members/php/unprotected_php/getTeamRounds2.php",
+      type: 'POST',
+      data: { "TeamID": teamId },
+      success: function (response) {
+        let rounds = JSON.parse(response)['payload']['content'];
+        $("#rounds").html(rounds);
+        removeGamesThatHaveNotBeenInitialisedInDatabase();
+        addOnClickListenerForRoundButtons();
+      }
+    });
+  }
 
-              $('#rounds button').click(function (event) {
-                highlightRound($(event.target));
-                let gameId = extractId(event.target.id);
-                $.ajax({
-                  url: "/members/php/unprotected_php/getGameData2.php",
-                  type: 'POST',
-                  data: { "GameID": gameId },
-                  success: function (response) {
-                    let gameInfo = JSON.parse(response)['payload'];
-                    let teamList = gameInfo['positions'];
-                    console.log(teamList);
-                    $("#container_").show();
-                    populateOvalWithPlayers(teamList);
+  function addOnClickListenerForRoundButtons() {
+    $('#rounds button').click(function (event) {
+      highlightRound($(event.target));
+      let gameId = extractId(event.target.id);
+      getGameDataAndPopulateOval(gameId);
+    });
+  }
 
-                  }
-                });
-              });
-            }
-          });
-        });
-
+  function getGameDataAndPopulateOval(gameId) {
+    $.ajax({
+      url: "/members/php/unprotected_php/getGameData2.php",
+      type: 'POST',
+      data: { "GameID": gameId },
+      success: function (response) {
+        let gameInfo = JSON.parse(response)['payload'];
+        let players = gameInfo['positions'];
+        $("#container_").show();
+        populateOvalWithPlayers(players);
       }
     });
   }
