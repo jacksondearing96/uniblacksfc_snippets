@@ -1,0 +1,286 @@
+
+
+<style>
+  
+#spacer {
+    height:1100px;
+    display:block;
+  }
+
+#container {
+  position: relative;
+  width: 100%;
+  padding-top: min(756px, 120%);
+  background-image: url("/members/images/blank_oval.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  font-family:Tahoma;
+  font-weight: bold;
+  max-width:630px;
+  max-height:756px;
+}
+
+#players div {
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#players div, #interchange {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 15px;
+}
+
+#interchange {
+  margin-top: 120%;
+  list-style-type: none;
+}
+
+#LFP, #FF, #RFP {
+  margin-top: 9%;
+}
+
+#LHF, #CHF, #RHF {
+  margin-top: 30%;
+}
+
+#LCW, #C, #RCW {
+  margin-top: 60%;
+}
+
+#LHB, #CHB, #RHB {
+  margin-top:85%;
+}
+
+#LBP, #FB, #RBP {
+  margin-top: 110%;
+}
+
+#FF, #CHF, #C, #CHB, #FB, #RR, #R, #RUCK {
+  margin-left: 50%;
+}
+
+#LFP, #LHF, #LCW, #LHB, #LBP {
+  margin-left: 20%;
+}
+
+#RFP, #RHF, #RCW, #RHB, #RBP {
+  margin-left: 80%;
+}
+
+#LFP, #RFP {
+  margin-top: 15%;
+}
+
+#LBP, #RBP {
+  margin-top: 103%;
+}
+
+#LFP, #LBP {
+  margin-left: 29%;
+}
+
+#RFP, #RBP {
+  margin-left: 70%;
+}
+
+#RUCK {
+  margin-top: 52%;
+}
+
+#RR {
+  margin-top: 57%;
+}
+
+#R {
+  margin-top: 62%;
+}
+
+#C {
+  margin-top: 67%;
+}
+  
+  #inputs {
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  #year-input {
+    height: 35px;
+    width: 80px;
+    border-radius: 5px;
+    border-width: 1px;
+    margin: 10px;
+    text-align: center;
+  }
+  
+  #womens-input {
+    margin-right: 10px;
+  }
+  
+  button {
+    height: 35px;
+    padding: 5px;
+    margin: 4px;
+  }
+  
+  button:hover {
+    cursor:pointer;
+  }
+  
+  #teams-for-year, #rounds {
+    margin: 10px;
+    text-align: center;
+  }
+</style>
+
+<div id="inputs">
+  <!-- TODO: set this to default to the current year. -->
+	Year: <input type="number" id="year-input" name="Year" value="2020">
+	Womens: <input type="checkbox" id="womens-input" name="Womens">
+	<button id="team-selection-button">Go</button>
+</div>
+
+<div id="teams-for-year"></div>
+<div id="rounds"></div>
+<div id="team-list"></div>
+
+    <div id='container'>
+        <p id="players"></p>
+        
+        <ul id="interchange">
+            <li style="text-align:center">INTERCHANGE:</li>
+        </ul>
+    </div>
+<span id='spacer'></span>
+
+<script>
+  var $ = jQuery.noConflict();
+  
+  function removeGamesThatHaveNotBeenInitialisedInDatabase() {
+  	// Rounds that have not been entered in the databse will appear with #id = game-GameID-0.
+    // Remove these games from the options.
+    while ($('#game-GameID-0').length != 0) {
+      $("#game-GameID-0").remove();
+    }
+  }
+  
+  function clearOvalOfAllPlayers() {
+  	$(".player").remove();
+  }
+  
+  function populateOvalWithPlayers(players) {
+    clearOvalOfAllPlayers();
+    
+  	for (let player of players) {
+        let position = player['Position'];
+        let tile;
+        if (position.includes('INT')) {
+            tile = document.createElement('li');
+        } else {
+            tile = document.createElement('div');
+        }
+        tile.setAttribute('id', position);
+        tile.setAttribute('class', 'player');
+        tile.innerHTML = player['FirstName'];
+      	if (position != 'RUCK' && position != 'R' && position != 'RR' && position != 'C' && !position.includes('INT')) {
+          tile.innerHTML += '<br>';
+        } else {
+          tile.innerHTML += ' ';
+        }
+        tile.innerHTML += player['Surname'];
+
+        if (position.includes('INT')) {
+            $('#interchange').append(tile);
+        } else {
+            $('#players').append(tile);
+        }
+    }
+  }
+  
+  function highlightElement(element) {
+    element.css("background-color", "lightgreen");
+  }
+  
+  function unhighlightElement(element) {
+    element.css("background-color", "lightgrey");
+  }
+  
+  function highlightTeam(teamButtonToHighlight) {
+    let teamButtons = $('#teams-for-year button');
+    for (let teamButton of teamButtons) {
+      unhighlightElement($(teamButton));
+    }
+    highlightElement(teamButtonToHighlight);
+  }
+  
+  function highlightRound(roundButtonToHighlight) {
+    let roundButtons = $('#rounds button');
+    for (let roundButton of roundButtons) {
+      unhighlightElement($(roundButton));
+    }
+    highlightElement(roundButtonToHighlight);
+  }
+  
+  function extractId(str) {
+    let strParts = str.split("-");
+    return strParts[strParts.length - 1];
+  }
+  
+	function getTeamsForYear(year, womens) {
+  	$.ajax({
+      url: "/members/php/unprotected_php/getGamesTeams2.php",
+      type: 'POST', 
+      data: { "Year":year, "Womens":womens },
+      success: function(response) {
+        let teamsButtons = JSON.parse(response)['payload']['content'];
+        $("#teams-for-year").html(teamsButtons);
+        
+        $('#teams-for-year button').click(function(event) {
+          clearOvalOfAllPlayers();
+          highlightTeam($(event.target));
+          let teamId = extractId(event.target.id);
+          console.log(teamId);
+					    $.ajax({
+                url: "/members/php/unprotected_php/getTeamRounds2.php",
+                type: 'POST', 
+                data: { "TeamID":teamId },
+                success: function(response) {
+                  let rounds = JSON.parse(response)['payload']['content'];
+                  console.log(rounds);
+        					$("#rounds").html(rounds);
+                  
+									removeGamesThatHaveNotBeenInitialisedInDatabase();
+                  
+                  $('#rounds button').click(function(event) {
+                    highlightRound($(event.target));
+          					let gameId = extractId(event.target.id);
+                    $.ajax({
+                      url: "/members/php/unprotected_php/getGameData2.php",
+                      type: 'POST', 
+                      data: { "GameID":gameId },
+                      success: function(response) {
+                        let gameInfo = JSON.parse(response)['payload'];
+                        let teamList = gameInfo['positions'];
+                        console.log(teamList);
+
+                        populateOvalWithPlayers(teamList);
+                        
+                      }
+                    });
+                  });
+                }
+              });
+        });
+  
+      }
+    });
+  }
+  
+  $("#team-selection-button").click(function() {
+    let year = $("#year-input").val();
+    let womens = $("#womens-input").is(":checked");
+    getTeamsForYear(year, womens);
+  });
+</script>
