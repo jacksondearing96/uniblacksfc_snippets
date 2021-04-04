@@ -1,111 +1,136 @@
-
-
 <style>
-  
-#spacer {
-    height:1100px;
-    display:block;
+  #team-selections #container_ {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 100%;
+    padding-top: min(756px, 120%);
+    background-image: url("/members/images/blank_oval.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    font-family: Tahoma;
+    font-weight: bold;
+    max-width: 630px;
+    max-height: 756px;
   }
 
-#container {
-  position: relative;
-  width: 100%;
-  padding-top: min(756px, 120%);
-  background-image: url("/members/images/blank_oval.png");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  font-family:Tahoma;
-  font-weight: bold;
-  max-width:630px;
-  max-height:756px;
-}
+  #team-selections #players div {
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
 
-#players div {
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
+  #team-selections #players div,
+  #team-selections #interchange {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 15px;
+  }
 
-#players div, #interchange {
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-size: 15px;
-}
+  #team-selections #interchange {
+    margin-top: 120%;
+    list-style-type: none;
+    margin-bottom: 50px;
+  }
 
-#interchange {
-  margin-top: 120%;
-  list-style-type: none;
-}
+  #team-selections #LFP,
+  #team-selections #FF,
+  #team-selections #RFP {
+    margin-top: 9%;
+  }
 
-#LFP, #FF, #RFP {
-  margin-top: 9%;
-}
+  #team-selections #LHF,
+  #team-selections #CHF,
+  #team-selections #RHF {
+    margin-top: 30%;
+  }
 
-#LHF, #CHF, #RHF {
-  margin-top: 30%;
-}
+  #team-selections #LCW,
+  #team-selections #C,
+  #team-selections #RCW {
+    margin-top: 60%;
+  }
 
-#LCW, #C, #RCW {
-  margin-top: 60%;
-}
+  #team-selections #LHB,
+  #team-selections #CHB,
+  #team-selections #RHB {
+    margin-top: 85%;
+  }
 
-#LHB, #CHB, #RHB {
-  margin-top:85%;
-}
+  #team-selections #LBP,
+  #team-selections #FB,
+  #team-selections #RBP {
+    margin-top: 110%;
+  }
 
-#LBP, #FB, #RBP {
-  margin-top: 110%;
-}
+  #team-selections #FF,
+  #team-selections #CHF,
+  #team-selections #C,
+  #team-selections #CHB,
+  #team-selections #FB,
+  #team-selections #RR,
+  #team-selections #R,
+  #team-selections #RUCK {
+    margin-left: 50%;
+  }
 
-#FF, #CHF, #C, #CHB, #FB, #RR, #R, #RUCK {
-  margin-left: 50%;
-}
+  #team-selections #LFP,
+  #team-selections #LHF,
+  #team-selections #LCW,
+  #team-selections #LHB,
+  #team-selections #LBP {
+    margin-left: 20%;
+  }
 
-#LFP, #LHF, #LCW, #LHB, #LBP {
-  margin-left: 20%;
-}
+  #team-selections #RFP,
+  #team-selections #RHF,
+  #team-selections #RCW,
+  #team-selections #RHB,
+  #team-selections #RBP {
+    margin-left: 80%;
+  }
 
-#RFP, #RHF, #RCW, #RHB, #RBP {
-  margin-left: 80%;
-}
+  #team-selections #LFP,
+  #team-selections #RFP {
+    margin-top: 15%;
+  }
 
-#LFP, #RFP {
-  margin-top: 15%;
-}
+  #team-selections #LBP,
+  #team-selections #RBP {
+    margin-top: 103%;
+  }
 
-#LBP, #RBP {
-  margin-top: 103%;
-}
+  #team-selections #LFP,
+  #team-selections #LBP {
+    margin-left: 29%;
+  }
 
-#LFP, #LBP {
-  margin-left: 29%;
-}
+  #team-selections #RFP,
+  #team-selections #RBP {
+    margin-left: 70%;
+  }
 
-#RFP, #RBP {
-  margin-left: 70%;
-}
+  #team-selections #RUCK {
+    margin-top: 52%;
+  }
 
-#RUCK {
-  margin-top: 52%;
-}
+  #team-selections #RR {
+    margin-top: 57%;
+  }
 
-#RR {
-  margin-top: 57%;
-}
+  #team-selections #R {
+    margin-top: 62%;
+  }
 
-#R {
-  margin-top: 62%;
-}
+  #team-selections #C {
+    margin-top: 67%;
+  }
 
-#C {
-  margin-top: 67%;
-}
-  
-  #inputs {
+  #team-selections #inputs {
     text-align: center;
     font-size: 18px;
   }
-  
+
   #year-input {
     height: 35px;
     width: 80px;
@@ -114,99 +139,146 @@
     margin: 10px;
     text-align: center;
   }
-  
+
   #womens-input {
     margin-right: 10px;
   }
-  
-  button {
+
+  #team-selections button,
+  #inputs button,
+  button:focus,
+  button:visited {
     height: 35px;
     padding: 5px;
     margin: 4px;
+    outline-style: none;
+    border-radius: 5px;
+    border-width: 1px;
+    min-width: 15px;
   }
-  
-  button:hover {
-    cursor:pointer;
+
+  #team-selections button:hover,
+  #inputs button:hover {
+    cursor: pointer;
   }
-  
-  #teams-for-year, #rounds {
+
+  #team-selections #teams-for-year,
+  #team-selections #rounds {
     margin: 10px;
     text-align: center;
+  }
+
+  #team-selections #teams-for-year,
+  #team-selections #rounds,
+  #inputs {
+    display: block;
+    margin: 20px;
+  }
+
+  #team-selections,
+  #inputs {
+    width: 100%;
+    text-align: center;
+  }
+
+  #teams-for-year p,
+  #teams-for-year>div>div>p {
+    display: none;
+  }
+
+  #container_ {
+    display: none;
+  }
+
+  #team-selections,
+  #container_ {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
   }
 </style>
 
 <div id="inputs">
   <!-- TODO: set this to default to the current year. -->
-	Year: <input type="number" id="year-input" name="Year" value="2020">
-	Womens: <input type="checkbox" id="womens-input" name="Womens">
-	<button id="team-selection-button">Go</button>
+  Year: <input type="number" id="year-input" name="Year" value="2020">
+  Womens: <input type="checkbox" id="womens-input" name="Womens">
+  <button id="team-selection-button">Go</button>
 </div>
+<div id="team-selections">
+  <div id="teams-for-year"></div>
+  <div id="rounds"></div>
 
-<div id="teams-for-year"></div>
-<div id="rounds"></div>
-<div id="team-list"></div>
+  <div id='container_'>
+    <p id="players"></p>
 
-    <div id='container'>
-        <p id="players"></p>
-        
-        <ul id="interchange">
-            <li style="text-align:center">INTERCHANGE:</li>
-        </ul>
-    </div>
-<span id='spacer'></span>
-
+    <ul id="interchange">
+      <li style="text-align:center">INTERCHANGE:</li>
+    </ul>
+  </div>
+</div>
 <script>
   var $ = jQuery.noConflict();
-  
+
   function removeGamesThatHaveNotBeenInitialisedInDatabase() {
-  	// Rounds that have not been entered in the databse will appear with #id = game-GameID-0.
+    // Rounds that have not been entered in the databse will appear with #id = game-GameID-0.
     // Remove these games from the options.
     while ($('#game-GameID-0').length != 0) {
       $("#game-GameID-0").remove();
     }
   }
-  
+
   function clearOvalOfAllPlayers() {
-  	$(".player").remove();
+    $(".player").remove();
   }
-  
+
+  // Takes an HTML element that is used to hold a player and populates the 
+  // element with the data to be shown for that player.
+  function initialisePlayerElementContent(playerElement, player) {
+    let position = player['Position'];
+    playerElement.setAttribute('id', position);
+    playerElement.setAttribute('class', 'player');
+    playerElement.innerHTML = player['FirstName'];
+
+    // Wrap some of the players' names for better viewing over the oval.
+    if (position != 'RUCK' && position != 'R' && position != 'RR' && position != 'C' && !position.includes('INT')) {
+      playerElement.innerHTML += '<br>';
+    } else {
+      playerElement.innerHTML += ' ';
+    }
+    playerElement.innerHTML += player['Surname'];
+  }
+
+  function populateOvalWithOnFieldPlayer(player) {
+    let playerElement = document.createElement('div');
+    initialisePlayerElementContent(playerElement, player);
+    $('#players').append(playerElement);
+  }
+
+  function populateInterchangeWithPlayer(player) {
+    let playerElement = document.createElement('li');
+    initialisePlayerElementContent(playerElement, player);
+    $('#interchange').append(playerElement);
+  }
+
   function populateOvalWithPlayers(players) {
     clearOvalOfAllPlayers();
-    
-  	for (let player of players) {
-        let position = player['Position'];
-        let tile;
-        if (position.includes('INT')) {
-            tile = document.createElement('li');
-        } else {
-            tile = document.createElement('div');
-        }
-        tile.setAttribute('id', position);
-        tile.setAttribute('class', 'player');
-        tile.innerHTML = player['FirstName'];
-      	if (position != 'RUCK' && position != 'R' && position != 'RR' && position != 'C' && !position.includes('INT')) {
-          tile.innerHTML += '<br>';
-        } else {
-          tile.innerHTML += ' ';
-        }
-        tile.innerHTML += player['Surname'];
 
-        if (position.includes('INT')) {
-            $('#interchange').append(tile);
-        } else {
-            $('#players').append(tile);
-        }
+    for (let player of players) {
+      if (player['Position'].includes('INT')) {
+        populateInterchangeWithPlayer(player);
+      } else {
+        populateOvalWithOnFieldPlayer(player);
+      }
     }
   }
-  
+
   function highlightElement(element) {
     element.css("background-color", "lightgreen");
   }
-  
+
   function unhighlightElement(element) {
-    element.css("background-color", "lightgrey");
+    element.css("background-color", "rgb(239, 239, 239)");
   }
-  
+
   function highlightTeam(teamButtonToHighlight) {
     let teamButtons = $('#teams-for-year button');
     for (let teamButton of teamButtons) {
@@ -214,7 +286,7 @@
     }
     highlightElement(teamButtonToHighlight);
   }
-  
+
   function highlightRound(roundButtonToHighlight) {
     let roundButtons = $('#rounds button');
     for (let roundButton of roundButtons) {
@@ -222,66 +294,65 @@
     }
     highlightElement(roundButtonToHighlight);
   }
-  
+
   function extractId(str) {
     let strParts = str.split("-");
     return strParts[strParts.length - 1];
   }
-  
-	function getTeamsForYear(year, womens) {
-  	$.ajax({
+
+  function getTeamsForYear(year, womens) {
+    $.ajax({
       url: "/members/php/unprotected_php/getGamesTeams2.php",
-      type: 'POST', 
-      data: { "Year":year, "Womens":womens },
-      success: function(response) {
+      type: 'POST',
+      data: { "Year": year, "Womens": womens },
+      success: function (response) {
         let teamsButtons = JSON.parse(response)['payload']['content'];
         $("#teams-for-year").html(teamsButtons);
-        
-        $('#teams-for-year button').click(function(event) {
+
+        $('#teams-for-year button').click(function (event) {
           clearOvalOfAllPlayers();
           highlightTeam($(event.target));
           let teamId = extractId(event.target.id);
           console.log(teamId);
-					    $.ajax({
-                url: "/members/php/unprotected_php/getTeamRounds2.php",
-                type: 'POST', 
-                data: { "TeamID":teamId },
-                success: function(response) {
-                  let rounds = JSON.parse(response)['payload']['content'];
-                  console.log(rounds);
-        					$("#rounds").html(rounds);
-                  
-									removeGamesThatHaveNotBeenInitialisedInDatabase();
-                  
-                  $('#rounds button').click(function(event) {
-                    highlightRound($(event.target));
-          					let gameId = extractId(event.target.id);
-                    $.ajax({
-                      url: "/members/php/unprotected_php/getGameData2.php",
-                      type: 'POST', 
-                      data: { "GameID":gameId },
-                      success: function(response) {
-                        let gameInfo = JSON.parse(response)['payload'];
-                        let teamList = gameInfo['positions'];
-                        console.log(teamList);
+          $.ajax({
+            url: "/members/php/unprotected_php/getTeamRounds2.php",
+            type: 'POST',
+            data: { "TeamID": teamId },
+            success: function (response) {
+              let rounds = JSON.parse(response)['payload']['content'];
+              console.log(rounds);
+              $("#rounds").html(rounds);
 
-                        populateOvalWithPlayers(teamList);
-                        
-                      }
-                    });
-                  });
-                }
+              removeGamesThatHaveNotBeenInitialisedInDatabase();
+
+              $('#rounds button').click(function (event) {
+                highlightRound($(event.target));
+                let gameId = extractId(event.target.id);
+                $.ajax({
+                  url: "/members/php/unprotected_php/getGameData2.php",
+                  type: 'POST',
+                  data: { "GameID": gameId },
+                  success: function (response) {
+                    let gameInfo = JSON.parse(response)['payload'];
+                    let teamList = gameInfo['positions'];
+                    console.log(teamList);
+                    $("#container_").show();
+                    populateOvalWithPlayers(teamList);
+
+                  }
+                });
               });
+            }
+          });
         });
-  
+
       }
     });
   }
-  
-  $("#team-selection-button").click(function() {
+
+  $("#team-selection-button").click(function () {
     let year = $("#year-input").val();
     let womens = $("#womens-input").is(":checked");
     getTeamsForYear(year, womens);
   });
 </script>
-
