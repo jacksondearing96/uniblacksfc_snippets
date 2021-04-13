@@ -1,0 +1,219 @@
+  #team-selections #container_ {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 100%;
+    padding-top: min(756px, 120%);
+    background-image: url("/selections/images/blank_oval.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    font-family: Tahoma;
+    font-weight: bold;
+    max-width: 630px;
+    max-height: 756px;
+    margin-top:15px;
+  }
+
+  #arrow-up {
+    max-width: 30px !important;
+    position: absolute;
+    top: 50%;
+    left: 105%;
+    transform: translate(-50%, -50%);
+  }
+
+  #team-selections #players div {
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  #team-selections #players div {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 15px;
+    line-height: 100%;
+  }
+
+  #team-selections #interchange {
+    list-style-type: none;
+    line-height: 150%;
+    font-weight: bold;
+  }
+
+  #team-selections #LFP,
+  #team-selections #FF,
+  #team-selections #RFP {
+    margin-top: 12%;
+  }
+
+  #team-selections #LHF,
+  #team-selections #CHF,
+  #team-selections #RHF {
+    margin-top: 33%;
+  }
+
+  #team-selections #LCW,
+  #team-selections #C,
+  #team-selections #RCW {
+    margin-top: 63%;
+  }
+
+  #team-selections #LHB,
+  #team-selections #CHB,
+  #team-selections #RHB {
+    margin-top: 91%;
+  }
+
+  #team-selections #LBP,
+  #team-selections #FB,
+  #team-selections #RBP {
+    margin-top: 113%;
+  }
+
+  #team-selections #FF,
+  #team-selections #CHF,
+  #team-selections #C,
+  #team-selections #CHB,
+  #team-selections #FB,
+  #team-selections #RR,
+  #team-selections #R,
+  #team-selections #RUCK {
+    margin-left: 50%;
+  }
+
+  #team-selections #LFP,
+  #team-selections #LHF,
+  #team-selections #LCW,
+  #team-selections #LHB,
+  #team-selections #LBP {
+    margin-left: 20%;
+  }
+
+  #team-selections #RFP,
+  #team-selections #RHF,
+  #team-selections #RCW,
+  #team-selections #RHB,
+  #team-selections #RBP {
+    margin-left: 80%;
+  }
+
+  #team-selections #LFP,
+  #team-selections #RFP {
+    margin-top: 18%;
+  }
+
+  #team-selections #LBP,
+  #team-selections #RBP {
+    margin-top: 106%;
+  }
+
+  #team-selections #LFP,
+  #team-selections #LBP {
+    margin-left: 29%;
+  }
+
+  #team-selections #RFP,
+  #team-selections #RBP {
+    margin-left: 70%;
+  }
+
+  #team-selections #RUCK {
+    margin-top: 55%;
+  }
+
+  #team-selections #RR {
+    margin-top: 60%;
+  }
+
+  #team-selections #R {
+    margin-top: 65%;
+  }
+
+  #team-selections #C {
+    margin-top: 70%;
+  }
+
+  #team-selections #inputs {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  #year-input {
+    height: 35px;
+    width: 80px;
+    border-radius: 5px;
+    border-width: 1px;
+    margin: 10px;
+    text-align: center;
+  }
+
+  #womens-input {
+    margin-right: 10px;
+  }
+
+  #team-selections button,
+  #inputs button,
+  button:focus,
+  button:visited {
+    height: 35px;
+    padding: 5px;
+    margin: 4px;
+    outline-style: none;
+    border-radius: 5px;
+    border-width: 1px;
+    min-width: 15px;
+  }
+
+  #team-selections button:hover,
+  #inputs button:hover {
+    cursor: pointer;
+  }
+
+  #team-selections #teams-for-year,
+  #team-selections #rounds {
+    margin: 10px;
+    text-align: center;
+  }
+
+  #team-selections #teams-for-year,
+  #team-selections #rounds,
+  #inputs {
+    display: block;
+    margin: 20px;
+  }
+
+  #team-selections,
+  #inputs {
+    width: 100%;
+    text-align: center;
+  }
+
+  #teams-for-year p,
+  #teams-for-year>div>div>p {
+    display: none;
+  }
+
+  #container_, #interchange {
+    display: none;
+  }
+
+  #team-selections,
+  #container_ {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+  }
+
+@media (max-width: 550px) {
+  /* CSS that should be displayed if width is equal to or less than 800px goes here */
+    #team-selections #players div,
+    #team-selections #interchange {
+    font-size: 12px;
+    font-weight: normal;
+  }
+}
+
+/* This is the text that says "Select Team:" which is redundant. */
+#teams-for-year > div > div > p > strong {
+  display:none;
+}
