@@ -90,10 +90,28 @@
 
     let pregameInfoContainer = $('#pregameInfo');
     pregameInfoContainer.append('Date: ' + pregameInfo['Date'] + '<br>');
-    pregameInfoContainer.append('Ground: ' + pregameInfo['Ground'] + '<br>');
-    pregameInfoContainer.append('AUFC vs ' + pregameInfo['OppositionName'] + '<br>');
+    pregameInfoContainer.append('Ground: ' + pregameInfo['Ground'] + '<br><br>');
+    pregameInfoContainer.append('AUFC vs ' + pregameInfo['OppositionName'] + '<br><br>');
   }
-  
+
+  function populatePreGameInfoFromSubAuto() {
+    console.log('sending: ' + JSON.stringify({ teams: resultsRequestJson }));
+
+    fetch("http://localhost:5000/results", {
+      method: "POST",
+      "Content-Type": "application/json",
+      body: JSON.stringify({ teams: [ resultsRequestJson ] }),
+    })
+      .then((response) => response.text())
+      .then((html) => {
+        let pregameInfoContainer = $('#pregameInfo');
+        pregameInfoContainer.html(html);
+
+        let postgameInfoContainer = $('#postgameInfo');
+        postgameInfoContainer.html('');
+      });
+  }
+
   function populatePostGameInfo(postgameInfo, pregameInfo) {
     clearPostGameInfo();
 
@@ -122,11 +140,13 @@
   }
 
   function highlightElement(element) {
-    element.css("background-color", "lightgreen");
+    element.css('background-color', 'lightgreen');
+    element.css('color', 'black');
   }
 
   function unhighlightElement(element) {
-    element.css("background-color", "rgb(239, 239, 239)");
+    element.css("background-color", "black");
+    element.css('color', 'white');
   }
 
   function highlightTeam(teamButtonToHighlight) {
@@ -150,7 +170,17 @@
     return strParts[strParts.length - 1];
   }
 
+  resultsRequestJson = {
+    nickname: '',
+    is_final: false,
+    is_past_game: true,
+    skip_this_game: false,
+    url_code: null
+  };
+
   function getTeamsForYear(year) {
+    resultsRequestJson['year'] = year;
+
     clearTeamsButtons();
     // Send requests for both men's and womens games.
     // Do this because women's games are combined with men's games prior to 2018.
@@ -193,7 +223,9 @@
 
       highlightTeam($(event.target));
       let teamId = extractId(event.target.id);
+      resultsRequestJson['gender'] = event.target.innerHTML.includes('Womens') ? 'Womens' : 'Mens';
       getRoundsForTeam(teamId);
+      getDivisionForTeam(teamId);
     });
   }
 
@@ -211,8 +243,31 @@
     });
   }
 
+  function getDivisionForTeam(teamId) {
+    $.ajax({
+      url: "/members/php/unprotected_php/getTeamDivision.php",
+      type: 'POST',
+      data: { "TeamID": teamId },
+      success: function (response) {
+        let divison = response;
+        // Hack to make these divisons the same as what is defined in 
+        // team_configurations.json in subAuto so that the team's url can 
+        // be deduced from lookup in the map.
+        divison = divison.replace('Div', '');
+        divison = divison.replace(' ', '');
+        divison = divison.replace('R', 'Res');
+        divison = divison.replace('Res', ' Res');
+        divison = divison.replace('res', 'Res');
+        resultsRequestJson['division'] = divison;
+      }
+    });
+  }
+
   function addOnClickListenerForRoundButtons() {
     $('#rounds button').click(function (event) {
+      let round = Number(event.target.innerHTML);
+      resultsRequestJson['round'] = round;
+
       highlightRound($(event.target));
       let gameId = extractId(event.target.id);
       getGameDataAndPopulateOval(gameId);
@@ -241,45 +296,52 @@ function getDateFromDateString(dateString) {
   return new Date(year, monthIndex, day, hour, minute);
 }
 
-  function getGameDataAndPopulateOval(gameId) {
-    $.ajax({
-      url: "/members/php/unprotected_php/getGameData2.php",
-      type: 'POST',
-      data: { "GameID": gameId },
-      success: function (response) {
-        clearAllGameData();
-        
-        let gameInfo = JSON.parse(response)['payload'];
-        populatePreGameInfo(gameInfo['pregame']);
+function getGameDataAndPopulateOval(gameId) {
+  console.log(resultsRequestJson);
 
-        // Get the dates for the game and for the present.
-        let currentDate = new Date();
-        let gameDate = getDateFromDateString(gameInfo['pregame']['Date'])
+  $.ajax({
+    url: "/members/php/unprotected_php/getGameData2.php",
+    type: 'POST',
+    data: { "GameID": gameId },
+    success: function (response) {
+      clearAllGameData();
+      
+      let gameInfo = JSON.parse(response)['payload'];
+      populatePreGameInfo(gameInfo['pregame']);
+      populatePreGameInfoFromSubAuto();
 
-        if (gameDate.getTime() < currentDate.getTime()) {
-          // Game is in the past, populate the postgame data.
-          populatePostGameInfo(gameInfo['postgame'], gameInfo['pregame']);
-        }
+      // Get the dates for the game and for the present.
+      let currentDate = new Date();
+      let gameDate = getDateFromDateString(gameInfo['pregame']['Date'])
 
-        // To show the oval with player selections, make sure it is at least the Friday before the game.
-        const lastFriday = new Date(gameDate);
-        while (lastFriday.getDay() !== 5) {
-          lastFriday.setDate(lastFriday.getDate() - 1);
-        }
-        lastFriday.setHours(0,0,0,0);
-        if (currentDate.getTime() < lastFriday.getTime()) {
-          $('#pregameInfo').append('<br>Team will be released Friday before the game.');
-          return;
-        }
-
-        console.log(gameInfo);
-        let players = gameInfo['positions'];
-        $("#container_").show();
-        $('#interchange').show();
-        populateOvalWithPlayers(players);
+      if (gameDate.getTime() < currentDate.getTime()) {
+        // Game is in the past, populate the postgame data.
+        populatePostGameInfo(gameInfo['postgame'], gameInfo['pregame']);
       }
-    });
-  }
+
+      // To show the oval with player selections, make sure it is at least the Friday before the game.
+      const lastFriday = new Date(gameDate);
+      while (lastFriday.getDay() !== 5) {
+        lastFriday.setDate(lastFriday.getDate() - 1);
+      }
+      lastFriday.setHours(0,0,0,0);
+
+      // if (currentDate.getTime() < lastFriday.getTime()) {
+      // Disable this for now (sending the link in the player emails and don't want mismatch
+      // between team selected and team showing up here)
+      if (false) {
+        $('#pregameInfo').append('Team will be released Friday before the game.');
+        return;
+      }
+
+      console.log(gameInfo);
+      let players = gameInfo['positions'];
+      $("#container_").show();
+      $('#interchange').show();
+      populateOvalWithPlayers(players);
+    }
+  });
+}
 
   $("#team-selection-button").click(function () {
     let year = $("#year-input").val();
@@ -288,3 +350,23 @@ function getDateFromDateString(dateString) {
     clearRoundButtons();
     getTeamsForYear(year);
   });
+
+function addConsistentStyleToButtons() {
+  const WORDPRESS_THEME_BUTTON_CLASS = 'et_pb_button';
+  // Inspect every button, if any button does not have the class that provides the 
+  // consistent theme from wordpress, add this class. Also enforce black background.
+  $('button').each(function() {
+    if ($(this).hasClass(WORDPRESS_THEME_BUTTON_CLASS)) return;
+    $(this).addClass(WORDPRESS_THEME_BUTTON_CLASS);
+    $(this).css('background-color', 'black');
+    $(this).css('color', 'white');
+  });
+}
+
+addConsistentStyleToButtons();
+
+$(document).ready(addConsistentStyleToButtons);
+
+$('body').on('DOMSubtreeModified', '#team-selections', function(){
+  addConsistentStyleToButtons();
+});
